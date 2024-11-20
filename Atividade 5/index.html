@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilo.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <button id="btnNovo" class="botoes">Novo</button>
+    <button id="btnGerencia" class="botoes">Gerencia</button>
+
+    <h1 id="titulo"></h1>
+
+    <div id="conteudo">
+        <div class="Funcionario" id="Financeiro">
+            <h1>Financeiro</h1>
+        </div>
+        <div class="Funcionario" id="Administrativo">
+            <h1>Administrativo</h1>
+        </div>
+        <div class="Funcionario" id="Suporte">
+            <h1>Suporte</h1>
+        </div>
+    </div>
+
+    <div class="tela_escura" id="novoFuncionario" >
+        <div class="formulario">
+            <button id="btnFecharCadastrar" style="background-color: black; color: white;"> X </button>
+            
+            <h1>Cadastrar Funcionario</h1>
+
+            Nome <br>
+            <input type="text"  id="nomeFun">
+
+            Setor <br>
+            <select id="setorFun">
+                <option value="">Selecione</option>
+                <option value="Financeiro">Financeiro</option>
+                <option value="Administrativo">Administrativo</option>
+                <option value="Suporte">Suporte</option>
+            </select> <br> <br>
+
+            <button class="botoes" id="btnCadastrar">Cadastrar</button>
+        </div>
+    </div>
+
+    <div class="tela_escura" id="editarFuncionario" >
+        <div class="formulario">
+            <button id="btnFecharEditar" style="background-color: black; color: white;"> X </button>
+            
+            <h1>Editar Funcionario</h1>
+
+            matricula
+            <input type="text"  id="matriculaFun2" disabled="disabled"> <br>
+
+            Nome <br>
+            <input type="text"  id="nomeFun2">
+
+            Setor <br>
+            <select id="setorFun2">
+                <option value="">Selecione</option>
+                <option value="Financeiro">Financeiro</option>
+                <option value="Administrativo">Administrativo</option>
+                <option value="Suporte">Suporte</option>
+            </select> <br> <br>
+
+            situação
+            <select id="situacaoFun2">
+                <option value="">Selecione</option>
+                <option value="Ativo">Ativo</option>
+                <option value="Inativo">Inativo</option>
+            </select> <br> <br>
+
+            <button class="botoes" id="btnEditar">Altera cadastro</button>
+            <button class="botoes" id="btnDeletar">Deletar</button>
+        </div>
+    </div>
+
+
+<script>
+    $(document).ready(function(){
+        $("#novoFuncionario").hide();
+        $(".Funcionario").hide();
+        $("#editarFuncionario").hide();
+
+        $("#btnNovo").click(function(){
+            $("#novoFuncionario").show();
+        });
+
+        $("#btnFecharCadastrar").click(function(){
+            $("#novoFuncionario").hide();
+        });
+        
+        $("#btnFecharEditar").click(function(){
+            $("#editarFuncionario").hide();
+        })
+
+        $("#btnCadastrar").click(function(){
+            $("#novoFuncionario").hide();
+            $("#conteudo").html("<img src='loading.gif' height='100'>");
+            var nomeGet = $("#nomeFun").val();
+            var setorGet = $("#setorFun").val();
+            $.ajax({
+                url: "cadastro.php",
+                type: "POST",
+                data: {nome: nomeGet, setor: setorGet},
+                success: function(resposta){
+                    alert(resposta)
+                },
+                error: function(resposta){
+                    alert(resposta)
+                }
+            });
+        });
+
+        $("#btnGerencia").click(function(){
+            $(".Funcionario").show();
+            $("#Financeiro").load("consulta_financeiro.php");
+            $("#Administrativo").load("consulta_adm.php");
+            $("#Suporte").load("consulta_Suporte.php");
+        });
+
+        $(document).on("click", ".cartoes", function(){
+            $("#editarFuncionario").show();
+            var matricula = $(this).find(".matricula").text();
+            $("#matriculaFun2").val(matricula);
+            var nome = $(this).find(".nome").text();
+            $("#nomeFun2").val(nome);
+            var setor = $(this).find(".setor").text();
+            $("#setorFun2").val(setor);
+            var situacao = $(this).find(".situacao").text();
+            $("#situacaoFun2").val(situacao);
+
+        })
+
+        $("#btnEditar").click(function(){
+            $("#editarFuncionario").hide();
+            $("#conteudo").html("<img src='loading.gif' height='100'>");
+            var matriculaGet = $("#matriculaFun2").val();
+            var nomeGet = $("#nomeFun2").val();
+            var setorGet = $("#setorFun2").val();
+            var situaGet = $("#situacaoFun2").val();
+            $.ajax({
+                url: "atualiza.php",
+                type: "POST",
+                data: {nome: nomeGet, setor: setorGet, situa:situaGet, matricula:matriculaGet},
+                success: function(resposta){
+                    alert(resposta)
+                },
+                error: function(resposta){
+                    alert(resposta)
+                }
+            });
+
+
+        })
+
+        $("#btnDeletar").click(Function(){
+            var
+        });
+
+    });
+</script>
+
+</body>
+</html>
